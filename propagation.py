@@ -35,7 +35,7 @@ class AttEncoder(nn.Module):
         )
 
         self.temporal_img_enc_net = nn.Linear(
-            temporal_img_enc_hid_dim * self.args.num_cell_h // 2 * self.args.num_cell_w // 2, temporal_img_enc_dim)
+            temporal_img_enc_hid_dim * (self.args.num_cell_h // 2) * (self.args.num_cell_w // 2), temporal_img_enc_dim)
 
     def forward(self, img_enc):
         """

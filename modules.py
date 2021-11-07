@@ -277,6 +277,67 @@ class ImgEncoder(nn.Module):
                     nn.CELU(),
                     nn.GroupNorm(16, img_encode_dim)
                 )
+            elif self.args.num_cell_h == 6:
+                self.enc = nn.Sequential(
+                    nn.Conv2d(3, 16, 4, 1, 1),
+                    nn.CELU(),
+                    nn.Conv2d(16, 16, 4, 2, 1),
+                    nn.CELU(),
+                    nn.GroupNorm(4, 16),
+                    nn.Conv2d(16, 16, 3, 1, 1),
+                    nn.CELU(),
+                    nn.GroupNorm(4, 16),
+                    nn.Conv2d(16, 32, 4, 2, 1),
+                    nn.CELU(),
+                    nn.GroupNorm(8, 32),
+                    nn.Conv2d(32, 32, 3, 1, 1),
+                    nn.CELU(),
+                    nn.GroupNorm(8, 32),
+                    nn.Conv2d(32, 64, 4, 2, 1),
+                    nn.CELU(),
+                    nn.GroupNorm(8, 64),
+                    nn.Conv2d(64, 64, 3, 1, 1),
+                    nn.CELU(),
+                    nn.GroupNorm(8, 64),
+                    nn.Conv2d(64, 128, 4, 2, 1),
+                    nn.CELU(),
+                    nn.GroupNorm(16, 128),
+                    nn.Conv2d(128, 128, 4, 1, 1),
+                    nn.CELU(),
+                    nn.GroupNorm(8, 128),
+                    nn.Conv2d(128, img_encode_dim, 1),
+                    nn.CELU(),
+                    nn.GroupNorm(16, img_encode_dim)
+                )
+            elif self.args.num_cell_h == 7:
+                self.enc = nn.Sequential(
+                    nn.Conv2d(3, 16, 4, 1, 1),
+                    nn.CELU(),
+                    nn.Conv2d(16, 16, 4, 2, 1),
+                    nn.CELU(),
+                    nn.GroupNorm(4, 16),
+                    nn.Conv2d(16, 16, 3, 1, 1),
+                    nn.CELU(),
+                    nn.GroupNorm(4, 16),
+                    nn.Conv2d(16, 32, 4, 2, 1),
+                    nn.CELU(),
+                    nn.GroupNorm(8, 32),
+                    nn.Conv2d(32, 32, 3, 1, 1),
+                    nn.CELU(),
+                    nn.GroupNorm(8, 32),
+                    nn.Conv2d(32, 64, 4, 2, 1),
+                    nn.CELU(),
+                    nn.GroupNorm(8, 64),
+                    nn.Conv2d(64, 64, 3, 1, 1),
+                    nn.CELU(),
+                    nn.GroupNorm(8, 64),
+                    nn.Conv2d(64, 128, 4, 2, 1),
+                    nn.CELU(),
+                    nn.GroupNorm(16, 128),
+                    nn.Conv2d(128, img_encode_dim, 1),
+                    nn.CELU(),
+                    nn.GroupNorm(16, img_encode_dim)
+                )
 
         self.enc_lat = nn.Sequential(
             nn.Conv2d(img_encode_dim, img_encode_dim, 3, 1, 1),
@@ -477,7 +538,7 @@ class ConvLSTMEncoder(nn.Module):
         img_conv_enc = self.image_enc(x.view(-1, x.size(2), x.size(3), x.size(4)))
 
         img_conv_enc = img_conv_enc.view(bs, -1, img_conv_enc.size(-3), img_conv_enc.size(-2), img_conv_enc.size(-1))
-
+        # print(f"img_conv_enc shape: {img_conv_enc.shape}", flush=True)
         img_enc, log_list = self.conv_lstm(img_conv_enc)
 
         return img_enc[0], log_list
@@ -519,10 +580,15 @@ class ConvLSTMCell(nn.Module):
 
     def forward(self, x, h_c):
         h_cur, c_cur = h_c
-
+        # print(f"x shape: {x.shape}", flush=True)
         xi, xf, xo, xc = self.conv_x(x).split(self.hidden_dim, dim=1)
 
         hi, hf, ho, hc = self.conv_h(h_cur).split(self.hidden_dim, dim=1)
+
+        # print(f"xi shape: {xi.shape}", flush=True)
+        # print(f"hi shape: {hi.shape}", flush=True)
+        # print(f"c_cur shape: {c_cur.shape}", flush=True)
+        # print(f"self.Wci shape: {self.Wci.shape}", flush=True)
 
         i = torch.sigmoid(xi + hi + c_cur * self.Wci)
         f = torch.sigmoid(xf + hf + c_cur * self.Wcf)

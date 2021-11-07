@@ -116,6 +116,61 @@ class ProposalCore(nn.Module):
                     nn.CELU(),
                     nn.GroupNorm(8, propagate_encode_dim)
                 )
+            elif self.args.num_cell_h == 6:
+                self.mask_enc_net = nn.Sequential(
+                    nn.Conv2d(1, 16, 5, 1, 1),
+                    nn.CELU(),
+                    nn.Conv2d(16, 16, 4, 2, 1),
+                    nn.CELU(),
+                    nn.GroupNorm(4, 16),
+                    nn.Conv2d(16, 32, 4, 2, 1),
+                    nn.CELU(),
+                    nn.GroupNorm(8, 32),
+                    nn.Conv2d(32, 32, 3, 1, 1),
+                    nn.CELU(),
+                    nn.GroupNorm(8, 32),
+                    nn.Conv2d(32, 64, 4, 2, 1),
+                    nn.CELU(),
+                    nn.GroupNorm(8, 64),
+                    nn.Conv2d(64, 64, 3, 1, 1),
+                    nn.CELU(),
+                    nn.GroupNorm(8, 64),
+                    nn.Conv2d(64, 64, 4, 2, 1),
+                    nn.CELU(),
+                    nn.GroupNorm(8, 64),
+                    nn.Conv2d(64, 64, 4, 1, 1),
+                    nn.CELU(),
+                    nn.GroupNorm(8, 64),
+                    nn.Conv2d(64, propagate_encode_dim, 1),
+                    nn.CELU(),
+                    nn.GroupNorm(8, propagate_encode_dim)
+                )
+            elif self.args.num_cell_h == 7:
+                self.mask_enc_net = nn.Sequential(
+                    nn.Conv2d(1, 16, 5, 1, 1),
+                    nn.CELU(),
+                    nn.Conv2d(16, 16, 4, 2, 1),
+                    nn.CELU(),
+                    nn.GroupNorm(4, 16),
+                    nn.Conv2d(16, 32, 4, 2, 1),
+                    nn.CELU(),
+                    nn.GroupNorm(8, 32),
+                    nn.Conv2d(32, 32, 3, 1, 1),
+                    nn.CELU(),
+                    nn.GroupNorm(8, 32),
+                    nn.Conv2d(32, 64, 4, 2, 1),
+                    nn.CELU(),
+                    nn.GroupNorm(8, 64),
+                    nn.Conv2d(64, 64, 3, 1, 1),
+                    nn.CELU(),
+                    nn.GroupNorm(8, 64),
+                    nn.Conv2d(64, 64, 4, 2, 1),
+                    nn.CELU(),
+                    nn.GroupNorm(8, 64),
+                    nn.Conv2d(64, propagate_encode_dim, 1),
+                    nn.CELU(),
+                    nn.GroupNorm(8, propagate_encode_dim)
+                )
 
         self.img_mask_cat_enc = nn.Sequential(
             nn.Conv2d(img_encode_dim + propagate_encode_dim, img_encode_dim, 1),
@@ -157,6 +212,10 @@ class ProposalCore(nn.Module):
             offset_y, offset_x = torch.meshgrid([torch.arange(8.), torch.arange(8.)])
         elif self.args.num_cell_h == 4:
             offset_y, offset_x = torch.meshgrid([torch.arange(4.), torch.arange(4.)])
+        elif self.args.num_cell_h == 6:
+            offset_y, offset_x = torch.meshgrid([torch.arange(6.), torch.arange(6.)])
+        elif self.args.num_cell_h == 7:
+            offset_y, offset_x = torch.meshgrid([torch.arange(7.), torch.arange(7.)])
 
         self.register_buffer('offset', torch.stack((offset_x, offset_y), dim=0))
 

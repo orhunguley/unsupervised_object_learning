@@ -12,7 +12,7 @@ def parse(parser):
                         help='number of total epochs to run (default: 4000)')
     parser.add_argument('--start-epoch', default=0, type=int, metavar='N',
                         help='manual epoch number (useful on restarts)')
-    parser.add_argument('-b', '--batch-size', default=20, type=int,
+    parser.add_argument('-b', '--batch-size', default=8, type=int,
                         metavar='N', help='mini-batch size (default: 20)')
     parser.add_argument('--lr', '--learning-rate', default=4e-5, type=float,
                         metavar='LR', help='initial learning rate')
@@ -20,15 +20,15 @@ def parse(parser):
                         metavar='CP', help='rate of gradient clipping')
     parser.add_argument('--print-freq', '-p', default=100, type=int,
                         metavar='N', help='print batch frequency (default: 100)')
-    parser.add_argument('--generate-freq', '-gp', default=500, type=int,
+    parser.add_argument('--generate-freq', '-gp', default=8000, type=int,
                         metavar='N', help='generation frequency (on training set) (default: 500)')
-    parser.add_argument('--save-epoch-freq', '-s', default=5000, type=int,
+    parser.add_argument('--save-epoch-freq', '-s', default=800, type=int,
                         metavar='N', help='save epoch frequency (default: 5000)')
     parser.add_argument('--last-ckpt', default='', type=str, metavar='PATH',
                         help='path to latest checkpoint (default: none)')
-    parser.add_argument('--ckpt-dir', default='./model/', metavar='DIR',
+    parser.add_argument('--ckpt-dir', default='./model_birdview_rbg_percGAN/', metavar='DIR',
                         help='path to save checkpoints')
-    parser.add_argument('--summary-dir', default='./summary', metavar='DIR',
+    parser.add_argument('--summary-dir', default='./model_birdview_rbg_percGAN', metavar='DIR',
                         help='path to save summary')
     parser.add_argument('--tau-end', default=0.5, type=float, metavar='T',
                         help='initial temperature for gumbel')
@@ -42,9 +42,8 @@ def parse(parser):
                         help='Multi-GPUs')
     parser.add_argument('--phase-simplify-summary', default=True, type=bool,
                         help='Only show image in summary log.')
-
-    args = parser.parse_args()
-
+#     args = parser.parse_args()
+    args = parser.parse_args(args=[])
     # common.cfg overrides
     parser.add_argument('--size-anc', type=float)
     parser.add_argument('--var-s', type=float)

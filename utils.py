@@ -49,7 +49,7 @@ def print_scalor(global_step, epoch, local_count, count_inter,
           f'total_loss: {total_loss.item():.4f} log_like: {log_like.item():.4f} '
           f'What KL: {z_what_kl_loss.item():.4f} Where KL: {z_where_kl_loss.item():.4f} '
           f'Pres KL: {z_pres_kl_loss.item():.4f} Depth KL: {z_depth_kl_loss.item():.4f} '
-          f'[{time_inter:.1f}s / {count_inter:>4} data]')
+          f'[{time_inter:.1f}s / {count_inter:>4} data]', flush=True)
     return
 
 
@@ -68,20 +68,20 @@ def save_ckpt(ckpt_dir, model, optimizer, global_step, epoch, local_count,
     ckpt_model_filename = f"ckpt_epoch_{global_step}.pth"
     path = os.path.join(ckpt_dir, ckpt_model_filename)
     torch.save(state, path)
-    print(f'{path:>2} has been successfully saved, global_step={global_step}')
+    print(f'{path:>2} has been successfully saved, global_step={global_step}', flush=True)
     return
 
 
 def load_ckpt(model, optimizer, model_file, device):
     if os.path.isfile(model_file):
-        print("=> loading checkpoint '{}'".format(model_file))
+        print("=> loading checkpoint '{}'".format(model_file), flush=True)
         checkpoint = torch.load(model_file, map_location=device)
         step = checkpoint['global_step']
         epoch = checkpoint['epoch']
         try:
             model.load_state_dict(checkpoint['state_dict'])
         except:
-            print('loading part of model since key check failed')
+            print('loading part of model since key check failed', flush=True)
             model_dict = {}
             state_dict = model.state_dict()
             for k, v in checkpoint['state_dict'].items():
@@ -92,7 +92,7 @@ def load_ckpt(model, optimizer, model_file, device):
         if optimizer:
             optimizer.load_state_dict(checkpoint['optimizer'])
         print("=> loaded checkpoint '{}' (epoch {})"
-              .format(model_file, checkpoint['epoch']))
+              .format(model_file, checkpoint['epoch']), flush=True)
 
         return step, epoch
 
@@ -124,6 +124,9 @@ def spatial_transform(image, z_where, out_dims, inverse=False):
     # 1. construct 2x3 affine matrix for each datapoint in the minibatch
     theta = torch.zeros(2, 3).repeat(image.shape[0], 1, 1).to(image.device)
     # set scaling
+    
+    # print(f"Theta shape: {theta.shape}", flush=True)
+    # print(f"Img shape: {image.shape}", flush=True)
     theta[:, 0, 0] = z_where[:, 0] if not inverse else 1 / (z_where[:, 0] + 1e-9)
     theta[:, 1, 1] = z_where[:, 1] if not inverse else 1 / (z_where[:, 1] + 1e-9)
 
