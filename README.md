@@ -27,7 +27,7 @@ The reconstructions failed with SCALOR trained on hard background.
 ![hard_bg_regular_scalor](/figures/hard_bg_regular_scalor.png)
 
 
-## Adding Perceptual Loss
+### Adding Perceptual Loss
 
 As it can be seen from the results, the reconstructive power of standard SCALOR failed with harder backgrounds. In order to improve the reconstructive power of the model, we added perceptual loss [6], where we used pre-trained VGG16 model's feature maps to focus on high-level features.
 ![perceptual_loss](/figures/perceptual_loss.png)
@@ -41,6 +41,7 @@ As propagation failed in this experiment, we softened the background, by adding 
 ![perceptual_gan](/figures/perceptual_gan.png)
 
 #### Results with Perceptual Loss + GAN loss Trained with blurred Background
+
 As perceptual loss and GAN loss helped with reconstructions and blurred background simplified inferring the background, the model was able go generate good reconstructions event with the over-crowded sequence in the example. The discovery and propagation modules work as it was intended.
 ![results_perceptual_gan](/figures/results_perceptual_gan.png)
 
@@ -51,6 +52,7 @@ As it can be seen from the generated glimpses from each cell, different cells ar
 As we had better results with perceptual loss and GAN loss added to standard SCALOR, we then experiment it in a multiple video setting like we did with standard version.
 
 #### Results with Perceptual Loss + GAN loss Trained with Multiple Videos(8 videos)
+
 As it can be seen from the visuals, the reconstructions with perceptual loss + GAN loss failed with multiple video sequences. The background generated is not clear. As the whole reconstruction is poor, the discovery and propagation modules are contributing the overall reconstruction instead of focusing on objects.
 ![results_perceptual_gan_multivid](/figures/results_perceptual_gan_multivid.png)
 
