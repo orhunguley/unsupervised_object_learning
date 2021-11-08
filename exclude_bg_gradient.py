@@ -1,3 +1,5 @@
+'''Script to extract backgrounds from original MOTSynth sequences'''
+
 from torch.utils.data import Dataset, DataLoader
 from motsynth import MOTSynth
 import os
